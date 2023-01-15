@@ -1,0 +1,5 @@
+/.idea/
+/.terraform/
+/.credentials.json
+/.states/
+/.terraform.lock.hcl
