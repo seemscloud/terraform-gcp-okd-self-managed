@@ -50,8 +50,10 @@ resource "google_compute_firewall" "healthcheck_to_all" {
 
   allow {
     protocol = "tcp"
-    ports    = ["8080"]
+    ports    = ["22"]
   }
+
+  target_tags = ["worker", "infra", "master"]
 }
 
 resource "google_compute_firewall" "all_to_lb" {
@@ -63,7 +65,7 @@ resource "google_compute_firewall" "all_to_lb" {
   allow {
     protocol = "tcp"
     ports    = [
-      "8080"
+      "22"
     ]
   }
 }
