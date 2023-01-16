@@ -27,7 +27,7 @@ aaa_dns_zone_aaa-dns_name = "seems.cloud."
 #     Load Balancing
 #
 aaa_healthcheck_aaa-name = "tcp-8080"
-aaa_healthcheck_aaa-port = 22
+aaa_healthcheck_aaa-port = 8080
 
 aaa_loadbalancing_aaa-name = "loadbalancing"
 aaa_loadbalancing_aaa-cidr = "10.100.100.0/24"
@@ -88,8 +88,7 @@ aaa_instance_ccc-automatic_restart = false
 #
 aaa_instance_ddd-name              = "worker"
 aaa_instance_ddd-counter           = 3
-# aaa_instance_ddd-image             = "fedora-coreos-cloud/fedora-coreos-stable"
-aaa_instance_ddd-image             = "ubuntu-os-cloud/ubuntu-minimal-2204-lts"
+aaa_instance_ddd-image             = "fedora-coreos-cloud/fedora-coreos-stable"
 aaa_instance_ddd-root_disk_size    = 64
 aaa_instance_ddd-root_disk_type    = "pd-ssd"
 aaa_instance_ddd-desired_status    = "RUNNING"
