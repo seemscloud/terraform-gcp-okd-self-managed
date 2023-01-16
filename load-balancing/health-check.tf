@@ -1,5 +1,7 @@
-resource "google_compute_health_check" "tcp_8080" {
-  name = var.aaa_healthcheck_aaa-name
+resource "google_compute_region_health_check" "load_balancing" {
+  name   = var.healthcheck_name
+  region = var.region
+
 
   timeout_sec         = 2
   check_interval_sec  = 2
@@ -7,6 +9,6 @@ resource "google_compute_health_check" "tcp_8080" {
   unhealthy_threshold = 2
 
   tcp_health_check {
-    port = var.aaa_healthcheck_aaa-port
+    port = var.healthcheck_port
   }
 }

@@ -1,27 +1,51 @@
-output "bastion-ip" {
+###################################
+#
+#     Bastion
+#
+output "bastion-external_addresses" {
   value = module.bastion.external_address
 }
 
-output "node_group-master_ips" {
+output "bastion-internal_addresses" {
+  value = module.bastion.internal_address
+}
+
+output "bastion-dns_a_records" {
+  value = module.bastion.dns_a_records
+}
+
+###################################
+#
+#     Node Group (Master)
+#
+output "node_group_master-internal_addresses" {
   value = module.node_group-master.internal_addresses
 }
 
-output "node_group-master_a_records" {
-  value = module.node_group-master.internal_a_records
+output "node_group_master-dns_a_records" {
+  value = module.node_group-master.dns_a_records
 }
 
-output "node_group-infra_ips" {
+###################################
+#
+#     Node Group (Infra)
+#
+output "node_group_infra-internal_addresses" {
   value = module.node_group-infra.internal_addresses
 }
 
-output "node_group-infra_a_records" {
-  value = module.node_group-infra.internal_a_records
+output "node_group_infra-dns_a_records" {
+  value = module.node_group-infra.dns_a_records
 }
 
-output "node_group-worker_ips" {
+###################################
+#
+#     Node Group (Worker)
+#
+output "node_group_worker-internal_addresses" {
   value = module.node_group-worker.internal_addresses
 }
 
-output "node_group-worker_a_records" {
-  value = module.node_group-worker.internal_a_records
+output "node_group_worker-dns_a_records" {
+  value = module.node_group-worker.dns_a_records
 }

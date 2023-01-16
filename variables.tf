@@ -26,15 +26,23 @@ variable "terraform_ssh_key_pub" {
 #
 #     Networking
 #
-variable "aaa_network_aaa-name" {
+variable "aaa_networking_aaa-name" {
   type = string
 }
 
-variable "aaa_dns_zone_aaa-name" {
+variable "aaa_networking_aaa-dns_zone_name" {
   type = string
 }
 
-variable "aaa_dns_zone_aaa-dns_name" {
+variable "aaa_networking_aaa-dns_zone_dns_name" {
+  type = string
+}
+
+variable "aaa_networking_aaa-lb_subnetwork_name" {
+  type = string
+}
+
+variable "aaa_networking_aaa-lb_subnetwork_cidr" {
   type = string
 }
 
@@ -48,14 +56,6 @@ variable "aaa_healthcheck_aaa-name" {
 
 variable "aaa_healthcheck_aaa-port" {
   type = number
-}
-
-variable "aaa_loadbalancing_aaa-name" {
-  type = string
-}
-
-variable "aaa_loadbalancing_aaa-cidr" {
-  type = string
 }
 
 ###################################

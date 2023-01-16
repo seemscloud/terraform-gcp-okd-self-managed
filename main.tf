@@ -5,9 +5,29 @@
 module "networking" {
   source = "./networking"
 
-  aaa_network_aaa-name      = local.aaa_network_aaa-name
-  aaa_dns_zone_aaa-name     = local.aaa_dns_zone_aaa-name
-  aaa_dns_zone_aaa-dns_name = var.aaa_dns_zone_aaa-dns_name
+  region = var.region
+
+  network_name       = local.aaa_networking_aaa-name
+  dns_zone_name      = local.aaa_networking_aaa-dns_zone_name
+  dns_zone_dns_name  = var.aaa_networking_aaa-dns_zone_dns_name
+  lb_subnetwork_name = local.aaa_networking_aaa-lb_subnetwork_name
+  lb_subnetwork_cidr = var.aaa_networking_aaa-lb_subnetwork_cidr
+}
+
+###################################
+#
+#     Load Balancing
+#
+module "load_balancing-bastion" {
+  source = "./load-balancing"
+
+  region = var.region
+
+  name              = var.aaa_instance_aaa-name
+  subnetwork_id     = module.bastion.subnetwork_id
+  instance_group_id = module.bastion.instance_group_id
+  healthcheck_name  = local.aaa_healthcheck_aaa-name
+  healthcheck_port  = var.aaa_healthcheck_aaa-port
 }
 
 ###################################
@@ -19,9 +39,8 @@ module "bastion" {
 
   region = var.region
 
-  network  = module.networking.aaa_network_aaa
-  dns_zone = module.networking.aaa_dns_zone_aaa
-
+  network           = module.networking.aaa_network_aaa
+  dns_zone          = module.networking.aaa_dns_zone_aaa
   name              = local.aaa_instance_aaa-name
   image             = var.aaa_instance_aaa-image
   root_disk_size    = var.aaa_instance_aaa-root_disk_size
@@ -33,7 +52,7 @@ module "bastion" {
   preemptible       = var.aaa_instance_aaa-preemptible
   automatic_restart = var.aaa_instance_aaa-automatic_restart
   cidr              = var.aaa_instance_aaa-cidr
-
+  lb_subnetwork     = module.networking.lb_subnetwork
 
   depends_on = [
     module.networking
@@ -49,9 +68,8 @@ module "node_group-master" {
 
   region = var.region
 
-  network  = module.networking.aaa_network_aaa
-  dns_zone = module.networking.aaa_dns_zone_aaa
-
+  network           = module.networking.aaa_network_aaa
+  dns_zone          = module.networking.aaa_dns_zone_aaa
   name              = local.aaa_instance_bbb-name
   counter           = var.aaa_instance_bbb-counter
   image             = var.aaa_instance_bbb-image
@@ -79,9 +97,8 @@ module "node_group-infra" {
 
   region = var.region
 
-  network  = module.networking.aaa_network_aaa
-  dns_zone = module.networking.aaa_dns_zone_aaa
-
+  network           = module.networking.aaa_network_aaa
+  dns_zone          = module.networking.aaa_dns_zone_aaa
   name              = local.aaa_instance_ccc-name
   counter           = var.aaa_instance_ccc-counter
   image             = var.aaa_instance_ccc-image
@@ -109,9 +126,8 @@ module "node_group-worker" {
 
   region = var.region
 
-  network  = module.networking.aaa_network_aaa
-  dns_zone = module.networking.aaa_dns_zone_aaa
-
+  network           = module.networking.aaa_network_aaa
+  dns_zone          = module.networking.aaa_dns_zone_aaa
   name              = local.aaa_instance_ddd-name
   counter           = var.aaa_instance_ddd-counter
   image             = var.aaa_instance_ddd-image
@@ -128,22 +144,4 @@ module "node_group-worker" {
   depends_on = [
     module.networking
   ]
-}
-
-###################################
-#
-#     Node Group (Worker)
-#
-module "load-balacing" {
-  source = "./load-balancing"
-
-  region = var.region
-
-  network = module.networking.aaa_network_aaa
-
-  aaa_healthcheck_aaa-name = local.aaa_healthcheck_aaa-name
-  aaa_healthcheck_aaa-port = var.aaa_healthcheck_aaa-port
-
-  loadbalancing_name = local.aaa_loadbalancing_aaa-name
-  loadbalancing_cidr = var.aaa_loadbalancing_aaa-cidr
 }

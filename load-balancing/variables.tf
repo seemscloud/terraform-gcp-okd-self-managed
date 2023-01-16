@@ -8,30 +8,24 @@ variable "region" {
 
 ###################################
 #
-#     Networking
-#
-variable "network" {
-  type = object({
-    id = string
-  })
-}
-
-###################################
-#
 #     Load Balancing
 #
-variable "aaa_healthcheck_aaa-name" {
+variable "name" {
   type = string
 }
 
-variable "aaa_healthcheck_aaa-port" {
+variable "subnetwork_id" {
+  type = string
+}
+
+variable "instance_group_id" {
+  type = string
+}
+
+variable "healthcheck_name" {
+  type = string
+}
+
+variable "healthcheck_port" {
   type = number
-}
-
-variable "loadbalancing_name" {
-  type = string
-}
-
-variable "loadbalancing_cidr" {
-  type = string
 }

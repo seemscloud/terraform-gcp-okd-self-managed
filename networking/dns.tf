@@ -1,16 +1,16 @@
-resource "google_dns_managed_zone" "aaa_dns_zone_aaa" {
-  name     = var.aaa_dns_zone_aaa-name
-  dns_name = var.aaa_dns_zone_aaa-dns_name
+resource "google_dns_managed_zone" "dns_zone" {
+  name     = var.dns_zone_name
+  dns_name = var.dns_zone_dns_name
 
   visibility = "private"
 
   private_visibility_config {
     networks {
-      network_url = google_compute_network.aaa_network_aaa.id
+      network_url = google_compute_network.network.id
     }
   }
 
   depends_on = [
-    google_compute_network.aaa_network_aaa
+    google_compute_network.network
   ]
 }

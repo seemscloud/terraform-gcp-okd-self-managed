@@ -18,19 +18,18 @@ EndOfMessage
 #
 #     Networking
 #
-aaa_network_aaa-name      = "network"
-aaa_dns_zone_aaa-name     = "seems-cloud"
-aaa_dns_zone_aaa-dns_name = "seems.cloud."
+aaa_networking_aaa-name               = "network"
+aaa_networking_aaa-dns_zone_name      = "seems-cloud"
+aaa_networking_aaa-dns_zone_dns_name  = "seems.cloud."
+aaa_networking_aaa-lb_subnetwork_name = "loadbalancing"
+aaa_networking_aaa-lb_subnetwork_cidr = "10.100.100.0/24"
 
 ###################################
 #
 #     Load Balancing
 #
-aaa_healthcheck_aaa-name = "tcp-8080"
-aaa_healthcheck_aaa-port = 8080
-
-aaa_loadbalancing_aaa-name = "loadbalancing"
-aaa_loadbalancing_aaa-cidr = "10.100.100.0/24"
+aaa_healthcheck_aaa-name = "tcp-80"
+aaa_healthcheck_aaa-port = 80
 
 ###################################
 #
@@ -47,6 +46,7 @@ aaa_instance_aaa-cidr              = "10.100.255.0/24"
 aaa_instance_aaa-type              = "e2-highcpu-2"
 aaa_instance_aaa-preemptible       = true
 aaa_instance_aaa-automatic_restart = false
+
 
 ###################################
 #

@@ -9,15 +9,15 @@ locals {
   #
   #     Networking
   #
-  aaa_network_aaa-name  = "${local.random}-${var.aaa_network_aaa-name}"
-  aaa_dns_zone_aaa-name = "${local.random}-${var.aaa_dns_zone_aaa-name}"
+  aaa_networking_aaa-name               = "${local.random}-${var.aaa_networking_aaa-name}"
+  aaa_networking_aaa-dns_zone_name      = "${local.random}-${var.aaa_networking_aaa-dns_zone_name}"
+  aaa_networking_aaa-lb_subnetwork_name = "${local.random}-${var.aaa_networking_aaa-lb_subnetwork_name}"
 
   ###################################
   #
   #     Load Balancing
   #
-  aaa_healthcheck_aaa-name   = "${local.random}-${var.aaa_healthcheck_aaa-name}"
-  aaa_loadbalancing_aaa-name = "${local.random}-${var.aaa_loadbalancing_aaa-name}"
+  aaa_healthcheck_aaa-name = "${local.random}-${var.aaa_healthcheck_aaa-name}"
 
   ###################################
   #

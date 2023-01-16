@@ -1,11 +1,35 @@
-variable "aaa_network_aaa-name" {
+###################################
+#
+#     Configuration
+#
+variable "region" {
   type = string
 }
 
-variable "aaa_dns_zone_aaa-name" {
+###################################
+#
+#     Networking
+#
+variable "network_name" {
   type = string
 }
 
-variable "aaa_dns_zone_aaa-dns_name" {
+variable "dns_zone_name" {
+  type = string
+}
+
+###################################
+#
+#     Load Balancing
+#
+variable "dns_zone_dns_name" {
+  type = string
+}
+
+variable "lb_subnetwork_name" {
+  type = string
+}
+
+variable "lb_subnetwork_cidr" {
   type = string
 }
