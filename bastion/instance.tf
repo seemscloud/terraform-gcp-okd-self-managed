@@ -30,10 +30,4 @@ resource "google_compute_instance" "bastion" {
     google_compute_subnetwork.bastion,
     google_compute_address.bastion
   ]
-
-#  lifecycle {
-  #    ignore_changes = [
-  #      boot_disk.0.initialize_params.0.image
-  #    ]
-  #  }
 }

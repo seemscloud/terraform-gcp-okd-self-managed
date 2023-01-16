@@ -129,3 +129,21 @@ module "node_group-worker" {
     module.networking
   ]
 }
+
+###################################
+#
+#     Node Group (Worker)
+#
+module "load-balacing" {
+  source = "./load-balancing"
+
+  region = var.region
+
+  network = module.networking.aaa_network_aaa
+
+  aaa_healthcheck_aaa-name = local.aaa_healthcheck_aaa-name
+  aaa_healthcheck_aaa-port = var.aaa_healthcheck_aaa-port
+
+  loadbalancing_name = local.aaa_loadbalancing_aaa-name
+  loadbalancing_cidr = var.aaa_loadbalancing_aaa-cidr
+}

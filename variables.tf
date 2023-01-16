@@ -40,6 +40,26 @@ variable "aaa_dns_zone_aaa-dns_name" {
 
 ###################################
 #
+#     Load Balancing
+#
+variable "aaa_healthcheck_aaa-name" {
+  type = string
+}
+
+variable "aaa_healthcheck_aaa-port" {
+  type = number
+}
+
+variable "aaa_loadbalancing_aaa-name" {
+  type = string
+}
+
+variable "aaa_loadbalancing_aaa-cidr" {
+  type = string
+}
+
+###################################
+#
 #     Bastion
 #
 variable "aaa_instance_aaa-name" {

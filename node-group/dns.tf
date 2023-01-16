@@ -1,4 +1,4 @@
-resource "google_dns_record_set" "bastion" {
+resource "google_dns_record_set" "node_group-a_records" {
   count = var.counter
   name  = "${var.name}-${count.index}.${var.dns_zone.dns_name}"
   type  = "A"

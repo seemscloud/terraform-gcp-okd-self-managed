@@ -24,6 +24,16 @@ aaa_dns_zone_aaa-dns_name = "seems.cloud."
 
 ###################################
 #
+#     Load Balancing
+#
+aaa_healthcheck_aaa-name = "tcp-8080"
+aaa_healthcheck_aaa-port = 22
+
+aaa_loadbalancing_aaa-name = "loadbalancing"
+aaa_loadbalancing_aaa-cidr = "10.100.100.0/24"
+
+###################################
+#
 #     Bastion
 #
 aaa_instance_aaa-name              = "bastion"
@@ -48,7 +58,7 @@ aaa_instance_bbb-image             = "fedora-coreos-cloud/fedora-coreos-stable"
 aaa_instance_bbb-root_disk_size    = 64
 aaa_instance_bbb-root_disk_type    = "pd-ssd"
 aaa_instance_bbb-desired_status    = "RUNNING"
-aaa_instance_bbb-tags              = ["kube-master", "all"]
+aaa_instance_bbb-tags              = ["master", "all"]
 aaa_instance_bbb-zones             = "europe-central2-a"
 aaa_instance_bbb-cidr              = "10.100.10.0/24"
 aaa_instance_bbb-type              = "e2-highcpu-2"
@@ -65,7 +75,7 @@ aaa_instance_ccc-image             = "fedora-coreos-cloud/fedora-coreos-stable"
 aaa_instance_ccc-root_disk_size    = 64
 aaa_instance_ccc-root_disk_type    = "pd-ssd"
 aaa_instance_ccc-desired_status    = "RUNNING"
-aaa_instance_ccc-tags              = ["kube-master", "all"]
+aaa_instance_ccc-tags              = ["infra", "all"]
 aaa_instance_ccc-zones             = "europe-central2-a"
 aaa_instance_ccc-cidr              = "10.100.20.0/24"
 aaa_instance_ccc-type              = "e2-highcpu-2"
@@ -78,11 +88,12 @@ aaa_instance_ccc-automatic_restart = false
 #
 aaa_instance_ddd-name              = "worker"
 aaa_instance_ddd-counter           = 3
-aaa_instance_ddd-image             = "fedora-coreos-cloud/fedora-coreos-stable"
+# aaa_instance_ddd-image             = "fedora-coreos-cloud/fedora-coreos-stable"
+aaa_instance_ddd-image             = "ubuntu-os-cloud/ubuntu-minimal-2204-lts"
 aaa_instance_ddd-root_disk_size    = 64
 aaa_instance_ddd-root_disk_type    = "pd-ssd"
 aaa_instance_ddd-desired_status    = "RUNNING"
-aaa_instance_ddd-tags              = ["kube-master", "all"]
+aaa_instance_ddd-tags              = ["worker", "all"]
 aaa_instance_ddd-zones             = "europe-central2-a"
 aaa_instance_ddd-cidr              = "10.100.30.0/24"
 aaa_instance_ddd-type              = "e2-highcpu-2"
