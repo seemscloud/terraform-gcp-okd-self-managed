@@ -1,7 +1,7 @@
 ```bash
 mkdir -p okd
 
-cat >install_config <<"EndOfMessage"
+cat >okd/install_config <<"EndOfMessage"
 apiVersion: v1
 baseDomain: seems.cloud
 metadata:
