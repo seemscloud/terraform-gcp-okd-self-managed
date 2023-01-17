@@ -23,7 +23,7 @@ module "load_balancing-bastion" {
 
   region = var.region
 
-  name              = var.aaa_instance_aaa-name
+  name              = local.aaa_instance_aaa-name
   subnetwork_id     = module.bastion.subnetwork_id
   instance_group_id = module.bastion.instance_group_id
   healthcheck_name  = local.aaa_healthcheck_aaa-name

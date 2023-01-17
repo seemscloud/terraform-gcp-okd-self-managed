@@ -16,6 +16,16 @@ output "bastion-dns_a_records" {
 
 ###################################
 #
+#     Load Balancing
+#
+output "load_balancer-dns_a_records" {
+  value = [
+    google_dns_record_set.load_balancer-dns_a_records.name
+  ]
+}
+
+###################################
+#
 #     Node Group (Master)
 #
 output "node_group_master-internal_addresses" {
