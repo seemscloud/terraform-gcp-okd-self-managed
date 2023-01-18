@@ -162,53 +162,53 @@ variable "aaa_instance_bbb-automatic_restart" {
 #
 #     Node Group (Infra)
 #
-variable "aaa_instance_ccc-name" {
-  type = string
-}
-
-variable "aaa_instance_ccc-counter" {
-  type = number
-}
-
-variable "aaa_instance_ccc-image" {
-  type = string
-}
-
-variable "aaa_instance_ccc-root_disk_size" {
-  type = number
-}
-
-variable "aaa_instance_ccc-root_disk_type" {
-  type = string
-}
-
-variable "aaa_instance_ccc-desired_status" {
-  type = string
-}
-
-variable "aaa_instance_ccc-tags" {
-  type = list(string)
-}
-
-variable "aaa_instance_ccc-zones" {
-  type = string
-}
-
-variable "aaa_instance_ccc-cidr" {
-  type = string
-}
-
-variable "aaa_instance_ccc-type" {
-  type = string
-}
-
-variable "aaa_instance_ccc-preemptible" {
-  type = bool
-}
-
-variable "aaa_instance_ccc-automatic_restart" {
-  type = bool
-}
+#variable "aaa_instance_ccc-name" {
+#  type = string
+#}
+#
+#variable "aaa_instance_ccc-counter" {
+#  type = number
+#}
+#
+#variable "aaa_instance_ccc-image" {
+#  type = string
+#}
+#
+#variable "aaa_instance_ccc-root_disk_size" {
+#  type = number
+#}
+#
+#variable "aaa_instance_ccc-root_disk_type" {
+#  type = string
+#}
+#
+#variable "aaa_instance_ccc-desired_status" {
+#  type = string
+#}
+#
+#variable "aaa_instance_ccc-tags" {
+#  type = list(string)
+#}
+#
+#variable "aaa_instance_ccc-zones" {
+#  type = string
+#}
+#
+#variable "aaa_instance_ccc-cidr" {
+#  type = string
+#}
+#
+#variable "aaa_instance_ccc-type" {
+#  type = string
+#}
+#
+#variable "aaa_instance_ccc-preemptible" {
+#  type = bool
+#}
+#
+#variable "aaa_instance_ccc-automatic_restart" {
+#  type = bool
+#}
 
 ###################################
 #
@@ -259,5 +259,57 @@ variable "aaa_instance_ddd-preemptible" {
 }
 
 variable "aaa_instance_ddd-automatic_restart" {
+  type = bool
+}
+
+###################################
+#
+#     Bootstrap
+#
+variable "aaa_instance_eee-name" {
+  type = string
+}
+
+variable "aaa_instance_eee-counter" {
+  type = number
+}
+
+variable "aaa_instance_eee-image" {
+  type = string
+}
+
+variable "aaa_instance_eee-root_disk_size" {
+  type = number
+}
+
+variable "aaa_instance_eee-root_disk_type" {
+  type = string
+}
+
+variable "aaa_instance_eee-desired_status" {
+  type = string
+}
+
+variable "aaa_instance_eee-tags" {
+  type = list(string)
+}
+
+variable "aaa_instance_eee-zones" {
+  type = string
+}
+
+variable "aaa_instance_eee-cidr" {
+  type = string
+}
+
+variable "aaa_instance_eee-type" {
+  type = string
+}
+
+variable "aaa_instance_eee-preemptible" {
+  type = bool
+}
+
+variable "aaa_instance_eee-automatic_restart" {
   type = bool
 }

@@ -22,7 +22,23 @@ aaa_networking_aaa-name               = "network"
 aaa_networking_aaa-dns_zone_name      = "seems-cloud"
 aaa_networking_aaa-dns_zone_dns_name  = "seems.cloud."
 aaa_networking_aaa-lb_subnetwork_name = "loadbalancing"
-aaa_networking_aaa-lb_subnetwork_cidr = "10.100.100.0/24"
+aaa_networking_aaa-lb_subnetwork_cidr = "10.255.255.0/24"
+
+###################################
+#
+#     Instance (Bastion)
+#
+aaa_instance_aaa-name              = "bastion"
+aaa_instance_aaa-image             = "ubuntu-os-cloud/ubuntu-minimal-2204-lts"
+aaa_instance_aaa-root_disk_size    = 64
+aaa_instance_aaa-root_disk_type    = "pd-ssd"
+aaa_instance_aaa-desired_status    = "RUNNING"
+aaa_instance_aaa-tags              = ["bastion", "all"]
+aaa_instance_aaa-zones             = "europe-central2-a"
+aaa_instance_aaa-cidr              = "10.100.100.0/24"
+aaa_instance_aaa-type              = "e2-highcpu-2"
+aaa_instance_aaa-preemptible       = true
+aaa_instance_aaa-automatic_restart = false
 
 ###################################
 #
@@ -33,20 +49,20 @@ aaa_healthcheck_aaa-port = 80
 
 ###################################
 #
-#     Bastion
+#     Node Group (Bootstrap)
 #
-aaa_instance_aaa-name              = "bastion"
-aaa_instance_aaa-image             = "ubuntu-os-cloud/ubuntu-minimal-2204-lts"
-aaa_instance_aaa-root_disk_size    = 64
-aaa_instance_aaa-root_disk_type    = "pd-ssd"
-aaa_instance_aaa-desired_status    = "RUNNING"
-aaa_instance_aaa-tags              = ["bastion", "all"]
-aaa_instance_aaa-zones             = "europe-central2-a"
-aaa_instance_aaa-cidr              = "10.100.255.0/24"
-aaa_instance_aaa-type              = "e2-highcpu-2"
-aaa_instance_aaa-preemptible       = true
-aaa_instance_aaa-automatic_restart = false
-
+aaa_instance_eee-name              = "bootstrap"
+aaa_instance_eee-counter           = 1
+aaa_instance_eee-image             = "fedora-coreos-cloud/fedora-coreos-stable"
+aaa_instance_eee-root_disk_size    = 64
+aaa_instance_eee-root_disk_type    = "pd-ssd"
+aaa_instance_eee-desired_status    = "RUNNING"
+aaa_instance_eee-tags              = ["bootstrap", "all"]
+aaa_instance_eee-zones             = "europe-central2-a"
+aaa_instance_eee-cidr              = "10.100.101.0/24"
+aaa_instance_eee-type              = "e2-highcpu-2"
+aaa_instance_eee-preemptible       = true
+aaa_instance_eee-automatic_restart = false
 
 ###################################
 #
@@ -58,29 +74,12 @@ aaa_instance_bbb-image             = "fedora-coreos-cloud/fedora-coreos-stable"
 aaa_instance_bbb-root_disk_size    = 64
 aaa_instance_bbb-root_disk_type    = "pd-ssd"
 aaa_instance_bbb-desired_status    = "RUNNING"
-aaa_instance_bbb-tags              = ["master", "all"]
+aaa_instance_bbb-tags              = ["master", "all", "cluster"]
 aaa_instance_bbb-zones             = "europe-central2-a"
-aaa_instance_bbb-cidr              = "10.100.10.0/24"
+aaa_instance_bbb-cidr              = "10.100.102.0/24"
 aaa_instance_bbb-type              = "e2-highcpu-2"
 aaa_instance_bbb-preemptible       = true
 aaa_instance_bbb-automatic_restart = false
-
-###################################
-#
-#     Node Group (Infra)
-#
-aaa_instance_ccc-name              = "infra"
-aaa_instance_ccc-counter           = 3
-aaa_instance_ccc-image             = "fedora-coreos-cloud/fedora-coreos-stable"
-aaa_instance_ccc-root_disk_size    = 64
-aaa_instance_ccc-root_disk_type    = "pd-ssd"
-aaa_instance_ccc-desired_status    = "RUNNING"
-aaa_instance_ccc-tags              = ["infra", "all"]
-aaa_instance_ccc-zones             = "europe-central2-a"
-aaa_instance_ccc-cidr              = "10.100.20.0/24"
-aaa_instance_ccc-type              = "e2-highcpu-2"
-aaa_instance_ccc-preemptible       = true
-aaa_instance_ccc-automatic_restart = false
 
 ###################################
 #
@@ -92,9 +91,9 @@ aaa_instance_ddd-image             = "fedora-coreos-cloud/fedora-coreos-stable"
 aaa_instance_ddd-root_disk_size    = 64
 aaa_instance_ddd-root_disk_type    = "pd-ssd"
 aaa_instance_ddd-desired_status    = "RUNNING"
-aaa_instance_ddd-tags              = ["worker", "all"]
+aaa_instance_ddd-tags              = ["worker", "all", "cluster"]
 aaa_instance_ddd-zones             = "europe-central2-a"
-aaa_instance_ddd-cidr              = "10.100.30.0/24"
+aaa_instance_ddd-cidr              = "10.100.103.0/24"
 aaa_instance_ddd-type              = "e2-highcpu-2"
 aaa_instance_ddd-preemptible       = true
 aaa_instance_ddd-automatic_restart = false

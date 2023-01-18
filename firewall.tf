@@ -1,19 +1,9 @@
-resource "google_compute_firewall" "all_to_bastion" {
-  name    = "${local.random}-all-to-bastion"
-  network = module.networking.aaa_network_aaa.name
-
-  source_tags = ["all"]
-
-  deny {
-    protocol = "tcp"
-    ports    = ["22"]
-  }
-
-  target_tags = ["bastion"]
-}
-
-resource "google_compute_firewall" "internet_to_bastion" {
-  name    = "${local.random}-internet-to-bastion"
+###############################################
+#
+#     Internet to Bastion
+#
+resource "google_compute_firewall" "allow-internet_to_bastion" {
+  name    = "${local.random}-allow-internet-to-bastion"
   network = module.networking.aaa_network_aaa.name
 
   source_ranges = ["0.0.0.0/0"]
@@ -26,8 +16,12 @@ resource "google_compute_firewall" "internet_to_bastion" {
   target_tags = ["bastion"]
 }
 
-resource "google_compute_firewall" "bastion_to_all" {
-  name    = "${local.random}-bastion-to-all"
+###############################################
+#
+#     Bastion to All
+#
+resource "google_compute_firewall" "allow-bastion_to_all" {
+  name    = "${local.random}-allow-bastion-to-all"
   network = module.networking.aaa_network_aaa.name
 
   source_tags = ["bastion"]
@@ -40,8 +34,12 @@ resource "google_compute_firewall" "bastion_to_all" {
   target_tags = ["all"]
 }
 
-resource "google_compute_firewall" "healthcheck_to_all" {
-  name    = "${local.random}-healthcheck-to-all"
+###############################################
+#
+#     Google Health Check IPs to All
+#
+resource "google_compute_firewall" "allow-healthcheck_to_all" {
+  name    = "${local.random}-allow-healthcheck-to-all"
   network = module.networking.aaa_network_aaa.name
 
   priority = 0
@@ -56,16 +54,75 @@ resource "google_compute_firewall" "healthcheck_to_all" {
   target_tags = ["worker", "infra", "master", "bastion"]
 }
 
-resource "google_compute_firewall" "all_to_lb" {
-  name    = "${local.random}-all-to-loadbalancers"
+###############################################
+#
+#     OKD Ports
+#
+resource "google_compute_firewall" "allow-cluster_to_cluster" {
+  name    = "${local.random}-allow-cluster-firewall"
   network = module.networking.aaa_network_aaa.name
 
-  source_tags = ["all"]
+  source_tags = ["cluster"]
 
   allow {
     protocol = "tcp"
-    ports    = [
-      "22"
-    ]
+    ports    = ["1936", "9000-9999", "10250-10259", "10256", "30000-32767"]
   }
+
+  allow {
+    protocol = "udp"
+    ports    = ["4789", "6081", "9000-9999", "500", "4500", "30000-32767"]
+  }
+
+  allow {
+    protocol = "icmp"
+  }
+
+  target_tags = ["cluster"]
+}
+
+resource "google_compute_firewall" "allow-worker_to_master" {
+  name    = "${local.random}-allow-worker-to-master"
+  network = module.networking.aaa_network_aaa.name
+
+  source_tags = ["worker"]
+
+  allow {
+    protocol = "tcp"
+    ports    = ["6443"]
+  }
+
+  target_tags = ["master"]
+}
+
+resource "google_compute_firewall" "allow-master_to_master" {
+  name    = "${local.random}-allow-master-to-master"
+  network = module.networking.aaa_network_aaa.name
+
+  source_tags = ["master"]
+
+  allow {
+    protocol = "tcp"
+    ports    = ["2379-2380"]
+  }
+
+  target_tags = ["master"]
+}
+
+resource "google_compute_firewall" "allow-cluster_to_bastion" {
+  name    = "${local.random}-allow-cluster-to-bastion"
+  network = module.networking.aaa_network_aaa.name
+
+  source_tags = ["cluster", "bootstrap"]
+
+  allow {
+    protocol = "tcp"
+    ports    = ["80"]
+  }
+
+  allow {
+    protocol = "icmp"
+  }
+
+  target_tags = ["bastion"]
 }

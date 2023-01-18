@@ -23,15 +23,9 @@ variable "dns_zone" {
   })
 }
 
-variable "lb_subnetwork" {
-  type = object({
-    id = string
-  })
-}
-
 ###################################
 #
-#     Bastion
+#     Instance
 #
 variable "name" {
   type = string

@@ -1,22 +1,26 @@
 ```bash
-mkdir -p archives
+mkdir -p archives archives/okd archives/fcos
 
 OKD_VERSION="4.11.0-0.okd-2023-01-14-152430"
+wget "https://github.com/okd-project/okd/releases/download/${OKD_VERSION}/openshift-client-linux-${OKD_VERSION}.tar.gz" -O archives/okd/os-client-linux.tar.gz
+wget "https://github.com/okd-project/okd/releases/download/${OKD_VERSION}/openshift-install-linux-${OKD_VERSION}.tar.gz" -O archives/okd/os-linux-install.tar.gz
+sudo tar -xvf archives/okd/os-client-linux.tar.gz -C /usr/local/bin
+sudo tar -xvf archives/okd/os-linux-install.tar.gz -C /usr/local/bin
 
-wget "https://github.com/okd-project/okd/releases/download/${OKD_VERSION}/openshift-client-linux-${OKD_VERSION}.tar.gz" -O archives/os-client-linux.tar.gz
-wget "https://github.com/okd-project/okd/releases/download/${OKD_VERSION}/openshift-install-linux-${OKD_VERSION}.tar.gz" -O archives/os-linux-install.tar.gz
-
-sudo tar -xvf archives/os-client-linux.tar.gz -C /usr/local/bin
-sudo tar -xvf archives/os-linux-install.tar.gz -C /usr/local/bin
+FCOS_VERSION="37.20221225.3.0"
+wget "https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/${FCOS_VERSION}/x86_64/fedora-coreos-${FCOS_VERSION}-metal.x86_64.raw.xz" -O archives/fcos/rhcos.raw.gz
+wget "https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/${FCOS_VERSION}/x86_64/fedora-coreos-${FCOS_VERSION}-metal.x86_64.raw.xz.sig" -O archives/fcos/rhcos.raw.gz.sig
+sudo cp archives/fcos/* /var/www/html
 ```
 
 ```bash
 sudo apt-get update
 
-sudo apt-get install -y curl wget
-sudo apt-get install -y nginx haproxy
-sudo apt-get install -y bind9-utils dnsutils net-tools telnet
+sudo apt-get install -y vim curl wget nginx haproxy bind9-utils dnsutils net-tools telnet
 
+```
+
+```bash
 mkdir -p install_dir
 
 cat >install_dir/install-config.yaml <<"EndOfMessage"
@@ -49,37 +53,67 @@ EndOfMessage
 
 ```bash
 openshift-install create manifests --log-level=debug --dir=install_dir/
-
 openshift-install create ignition-configs --log-level=debug --dir=install_dir/
+
+sudo cp -R install_dir/* /var/www/html/
+sudo chmod 644 /var/www/html/*
+sudo service nginx restart
+
 ```
 
-```yaml
+```
 frontend kube_api
-mode tcp
-bind :6443
-default_backend kube_api
+    mode tcp
+    bind :6443
+    default_backend kube_api
 
 backend kube_api
-mode tcp
-balance leastconn
-server bastion a9qvytcvs-bastion.seems.cloud:6433
-server master0 a9qvytcvs-master-0.seems.cloud:6443
-server master1 a9qvytcvs-master-1.seems.cloud:6443
-server master2 a9qvytcvs-master-2.seems.cloud:6443
+    mode tcp
+    balance leastconn
+    server bastion a9qvytcvs-bastion.seems.cloud:6433
+    server master0 a9qvytcvs-master-0.seems.cloud:6443
+    server master1 a9qvytcvs-master-1.seems.cloud:6443
+    server master2 a9qvytcvs-master-2.seems.cloud:6443
 
 frontend bootstrap
-mode tcp
-bind :22623
-default_backend bootstrap
+    mode tcp
+    bind :22623
+    default_backend bootstrap
 
 backend bootstrap
-mode tcp
-balance leastconn
-server bastion a9qvytcvs-bastion.seems.cloud:22623
-server master0 a9qvytcvs-master-0.seems.cloud:22623
-server master1 a9qvytcvs-master-1.seems.cloud:22623
-server master2 a9qvytcvs-master-2.seems.cloud:22623
+    mode tcp
+    balance leastconn
+    server bastion a9qvytcvs-bastion.seems.cloud:22623
+    server master0 a9qvytcvs-master-0.seems.cloud:22623
+    server master1 a9qvytcvs-master-1.seems.cloud:22623
+    server master2 a9qvytcvs-master-2.seems.cloud:22623
 EndOfMessage
+```
+
+```bash
+sudo umount /boot
+sudo mount /dev/sda3 /boot/
+
+sudo -i su -
+
+INST_URL="http://10.100.100.2:80"
+
+INST_ENABLED="coreos.inst=yes"
+INST_DEV="coreos.inst.install_dev=/dev/sda"
+INST_IMAGE="coreos.inst.image_url=${INST_URL}/rhcos.raw.gz"
+INST_IGN="coreos.inst.ignition_url=${INST_URL}/bootstrap.ign"
+
+COREOS_INST="${INST_ENABLED} ${INST_DEV} ${INST_IMAGE} ${INST_IGN}"
+
+ADDR="10.100.101.5"
+GW="10.100.101.1"
+NETMASK="255.255.255.255"
+NAMESERVER="169.254.169.254"
+
+echo "${COREOS_INST} ip=${ADDR} gw=${GW} netmask=${NETMASK} nameserver=${NAMESERVER}"
+
+# edit loader
+
 ```
 
 ```bash

@@ -1,6 +1,6 @@
 ###################################
 #
-#     Bastion
+#     Instance (Bastion)
 #
 output "bastion-external_addresses" {
   value = module.bastion.external_address
@@ -26,6 +26,18 @@ output "load_balancer-dns_a_records" {
 
 ###################################
 #
+#     Node Group (Bootstrap)
+#
+output "node_group_bootstrap-internal_addresses" {
+  value = module.node_group-bootstrap.internal_addresses
+}
+
+output "node_group_bootstrap-dns_a_records" {
+  value = module.node_group-bootstrap.dns_a_records
+}
+
+###################################
+#
 #     Node Group (Master)
 #
 output "node_group_master-internal_addresses" {
@@ -34,18 +46,6 @@ output "node_group_master-internal_addresses" {
 
 output "node_group_master-dns_a_records" {
   value = module.node_group-master.dns_a_records
-}
-
-###################################
-#
-#     Node Group (Infra)
-#
-output "node_group_infra-internal_addresses" {
-  value = module.node_group-infra.internal_addresses
-}
-
-output "node_group_infra-dns_a_records" {
-  value = module.node_group-infra.dns_a_records
 }
 
 ###################################

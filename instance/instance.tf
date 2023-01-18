@@ -1,4 +1,4 @@
-resource "google_compute_instance" "bastion" {
+resource "google_compute_instance" "instance" {
   name           = var.name
   machine_type   = var.type
   zone           = var.zones
@@ -15,10 +15,10 @@ resource "google_compute_instance" "bastion" {
 
   network_interface {
     network    = var.network.id
-    subnetwork = google_compute_subnetwork.bastion.id
+    subnetwork = google_compute_subnetwork.instance.id
 
     access_config {
-      nat_ip = google_compute_address.bastion.address
+      nat_ip = google_compute_address.instance.address
     }
   }
   scheduling {
@@ -27,7 +27,13 @@ resource "google_compute_instance" "bastion" {
   }
 
   depends_on = [
-    google_compute_subnetwork.bastion,
-    google_compute_address.bastion
+    google_compute_subnetwork.instance,
+    google_compute_address.instance
   ]
+
+  lifecycle {
+    ignore_changes = [
+      boot_disk.0.initialize_params.0.image
+    ]
+  }
 }

@@ -15,15 +15,21 @@ locals {
 
   ###################################
   #
+  #     Bastion
+  #
+  aaa_instance_aaa-name = "${local.random}-${var.aaa_instance_aaa-name}"
+
+  ###################################
+  #
   #     Load Balancing
   #
   aaa_healthcheck_aaa-name = "${local.random}-${var.aaa_healthcheck_aaa-name}"
 
   ###################################
   #
-  #     Bastion
+  #     Node Group (Bootstrap)
   #
-  aaa_instance_aaa-name = "${local.random}-${var.aaa_instance_aaa-name}"
+  aaa_instance_eee-name = "${local.random}-${var.aaa_instance_eee-name}"
 
   ###################################
   #
@@ -35,7 +41,7 @@ locals {
   #
   #     Node Group (Infra)
   #
-  aaa_instance_ccc-name = "${local.random}-${var.aaa_instance_ccc-name}"
+  #aaa_instance_ccc-name = "${local.random}-${var.aaa_instance_ccc-name}"
 
   ###################################
   #
