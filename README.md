@@ -1,3 +1,5 @@
+## Prepare Bastion as Load Balancer
+
 ```bash
 mkdir -p archives archives/okd archives/fcos
 
@@ -61,7 +63,10 @@ sudo service nginx restart
 
 ```
 
-```
+```bash
+PREFIX="a9qvytcvs"
+
+cat >haproxy.cfg <<EndOfMessage
 frontend kube_api
     mode tcp
     bind :6443
@@ -70,10 +75,10 @@ frontend kube_api
 backend kube_api
     mode tcp
     balance leastconn
-    server bastion a9qvytcvs-bastion.seems.cloud:6433
-    server master0 a9qvytcvs-master-0.seems.cloud:6443
-    server master1 a9qvytcvs-master-1.seems.cloud:6443
-    server master2 a9qvytcvs-master-2.seems.cloud:6443
+    server bastion ${PREFIX}-bootstrap.seems.cloud:6433
+    server master0 ${PREFIX}-master-0.seems.cloud:6443
+    server master1 ${PREFIX}-master-1.seems.cloud:6443
+    server master2 ${PREFIX}-master-2.seems.cloud:6443
 
 frontend bootstrap
     mode tcp
@@ -83,12 +88,26 @@ frontend bootstrap
 backend bootstrap
     mode tcp
     balance leastconn
-    server bastion a9qvytcvs-bastion.seems.cloud:22623
-    server master0 a9qvytcvs-master-0.seems.cloud:22623
-    server master1 a9qvytcvs-master-1.seems.cloud:22623
-    server master2 a9qvytcvs-master-2.seems.cloud:22623
+    server bastion ${PREFIX}-bootstrap.seems.cloud:22623
+    server master0 ${PREFIX}-master-0.seems.cloud:22623
+    server master1 ${PREFIX}-master-1.seems.cloud:22623
+    server master2 ${PREFIX}-master-2.seems.cloud:22623
 EndOfMessage
+
+sudo service haproxy restart
+
 ```
+
+## Install Node
+
+#### Run on bastion node
+
+```bash
+openshift-install wait-for bootstrap-complete --log-level=debug --dir=install_dir/
+
+```
+
+#### Prepare Bootstrap / Master / Worker
 
 ```bash
 sudo umount /boot
@@ -96,27 +115,27 @@ sudo mount /dev/sda3 /boot/
 
 sudo -i su -
 
-INST_URL="http://10.100.100.2:80"
-
-INST_ENABLED="coreos.inst=yes"
-INST_DEV="coreos.inst.install_dev=/dev/sda"
-INST_IMAGE="coreos.inst.image_url=${INST_URL}/rhcos.raw.gz"
-INST_IGN="coreos.inst.ignition_url=${INST_URL}/bootstrap.ign"
-
-COREOS_INST="${INST_ENABLED} ${INST_DEV} ${INST_IMAGE} ${INST_IGN}"
-
 ADDR="10.100.101.5"
 GW="10.100.101.1"
 NETMASK="255.255.255.255"
 NAMESERVER="169.254.169.254"
 
+INST_URL="http://10.100.100.2:80"
+
+INST_TYPE="bootstrap"
+# INST_TYPE="master"
+# INST_TYPE="worker"
+
+INST_ENABLED="coreos.inst=yes"
+INST_DEV="coreos.inst.install_dev=/dev/sda"
+INST_IMAGE="coreos.inst.image_url=${INST_URL}/rhcos.raw.gz"
+INST_IGN="coreos.inst.ignition_url=${INST_URL}/${INST_TYPE}.ign"
+
+COREOS_INST="${INST_ENABLED} ${INST_DEV} ${INST_IMAGE} ${INST_IGN}"
+
 echo "${COREOS_INST} ip=${ADDR} gw=${GW} netmask=${NETMASK} nameserver=${NAMESERVER}"
 
-# edit loader
+# edit loader to add 'coreos.inst' string
 
 ```
 
-```bash
-openshift-install wait-for bootstrap-complete --log-level=debug --dir=install_dir/
-
-```
