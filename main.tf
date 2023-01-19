@@ -22,6 +22,7 @@ module "bastion" {
   source = "./instance"
 
   region = var.region
+  prefix = local.random
 
   network  = module.networking.aaa_network_aaa
   dns_zone = module.networking.aaa_dns_zone_aaa
@@ -67,6 +68,7 @@ module "node_group-bootstrap" {
   source = "./node-group"
 
   region = var.region
+  prefix = local.random
 
   network  = module.networking.aaa_network_aaa
   dns_zone = module.networking.aaa_dns_zone_aaa
@@ -97,6 +99,7 @@ module "node_group-master" {
   source = "./node-group"
 
   region = var.region
+  prefix = local.random
 
   network  = module.networking.aaa_network_aaa
   dns_zone = module.networking.aaa_dns_zone_aaa
@@ -127,6 +130,7 @@ module "node_group-worker" {
   source = "./node-group"
 
   region = var.region
+  prefix = local.random
 
   network  = module.networking.aaa_network_aaa
   dns_zone = module.networking.aaa_dns_zone_aaa

@@ -1,5 +1,5 @@
 resource "google_dns_record_set" "instance" {
-  name = "${var.name}.${var.dns_zone.dns_name}"
+  name = trimprefix("${var.name}.${var.dns_zone.dns_name}", "${var.prefix}-")
   type = "A"
   ttl  = 1
 

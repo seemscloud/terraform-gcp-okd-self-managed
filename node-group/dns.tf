@@ -1,6 +1,6 @@
 resource "google_dns_record_set" "node_group-dns_a_records" {
   count = var.counter
-  name  = "${var.name}-${count.index}.${var.dns_zone.dns_name}"
+  name  = trimprefix("${var.name}-${count.index}.${var.dns_zone.dns_name}", "${var.prefix}-")
   type  = "A"
   ttl   = 1
 

@@ -32,4 +32,14 @@ resource "google_compute_instance" "node_group" {
       boot_disk.0.initialize_params.0.image
     ]
   }
+
+  shielded_instance_config {
+    enable_vtpm                 = false
+    enable_integrity_monitoring = false
+    enable_secure_boot          = false
+  }
+
+  metadata = {
+    serial-port-enable = true
+  }
 }

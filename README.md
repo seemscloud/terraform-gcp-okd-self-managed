@@ -1,24 +1,33 @@
 ## Prepare Bastion as Load Balancer
 
 ```bash
-mkdir -p archives archives/okd archives/fcos
+sudo apt-get update
 
-OKD_VERSION="4.11.0-0.okd-2023-01-14-152430"
-wget "https://github.com/okd-project/okd/releases/download/${OKD_VERSION}/openshift-client-linux-${OKD_VERSION}.tar.gz" -O archives/okd/os-client-linux.tar.gz
-wget "https://github.com/okd-project/okd/releases/download/${OKD_VERSION}/openshift-install-linux-${OKD_VERSION}.tar.gz" -O archives/okd/os-linux-install.tar.gz
-sudo tar -xvf archives/okd/os-client-linux.tar.gz -C /usr/local/bin
-sudo tar -xvf archives/okd/os-linux-install.tar.gz -C /usr/local/bin
-
-FCOS_VERSION="37.20221225.3.0"
-wget "https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/${FCOS_VERSION}/x86_64/fedora-coreos-${FCOS_VERSION}-metal.x86_64.raw.xz" -O archives/fcos/rhcos.raw.gz
-wget "https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/${FCOS_VERSION}/x86_64/fedora-coreos-${FCOS_VERSION}-metal.x86_64.raw.xz.sig" -O archives/fcos/rhcos.raw.gz.sig
-sudo cp archives/fcos/* /var/www/html
+sudo apt-get install -y vim curl wget nginx haproxy bind9-utils dnsutils net-tools telnet bash-completion
 ```
 
 ```bash
-sudo apt-get update
+mkdir -p archives archives/okd archives/fcos
 
-sudo apt-get install -y vim curl wget nginx haproxy bind9-utils dnsutils net-tools telnet
+OKD_VERSION="4.11.0-0.okd-2023-01-14-152430"
+FCOS_VERSION="37.20221225.3.0"
+
+wget "https://github.com/okd-project/okd/releases/download/${OKD_VERSION}/openshift-client-linux-${OKD_VERSION}.tar.gz" -O archives/okd/os-client-linux.tar.gz
+wget "https://github.com/okd-project/okd/releases/download/${OKD_VERSION}/openshift-install-linux-${OKD_VERSION}.tar.gz" -O archives/okd/os-linux-install.tar.gz
+wget "https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/${FCOS_VERSION}/x86_64/fedora-coreos-${FCOS_VERSION}-metal.x86_64.raw.xz" -O archives/fcos/rhcos.raw.gz
+wget "https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/${FCOS_VERSION}/x86_64/fedora-coreos-${FCOS_VERSION}-metal.x86_64.raw.xz.sig" -O archives/fcos/rhcos.raw.gz.sig
+
+sudo tar -xf archives/okd/os-client-linux.tar.gz -C /usr/local/bin
+sudo tar -xf archives/okd/os-linux-install.tar.gz -C /usr/local/bin
+sudo cp archives/fcos/* /var/www/html
+
+sudo chmod 755 /usr/local/bin/*
+sudo chmod 644 /var/www/html/*
+sudo rm -f /var/www/html/*.html
+sudo rm -f /usr/local/bin/README.md
+
+ls -lh /usr/local/bin
+ls -lh /var/www/html
 
 ```
 
@@ -64,34 +73,84 @@ sudo service nginx restart
 ```
 
 ```bash
-PREFIX="a9qvytcvs"
+cat <<"EndOfMessage" | sudo tee /etc/haproxy/haproxy.cfg
+global
+    log       /dev/log    local0
+    log       /dev/log    local1 notice
+    chroot    /var/lib/haproxy
+    stats     socket /run/haproxy/admin.sock mode 660 level admin expose-fd listeners
+    stats     timeout 30s
+    user      haproxy
+    group     haproxy
+    daemon
 
-cat >haproxy.cfg <<EndOfMessage
+listen stats
+    bind :9000
+    mode http
+    stats enable
+    stats uri /
+
+defaults
+    option  forwardfor      except 127.0.0.0/8
+    retries                 3
+    timeout http-request    10s
+    timeout queue           1m
+    timeout connect         10s
+    timeout client          300s
+    timeout server          300s
+    timeout http-keep-alive 10s
+    timeout check           10s
+    maxconn                 20000
+    
 frontend kube_api
-    mode tcp
-    bind :6443
+    mode            tcp
+    bind            :6443
     default_backend kube_api
 
 backend kube_api
-    mode tcp
-    balance leastconn
-    server bastion ${PREFIX}-bootstrap.seems.cloud:6433
-    server master0 ${PREFIX}-master-0.seems.cloud:6443
-    server master1 ${PREFIX}-master-1.seems.cloud:6443
-    server master2 ${PREFIX}-master-2.seems.cloud:6443
+    mode      tcp
+    balance   leastconn
+    server    bootstrap   bootstrap-0.seems.cloud:6443  check
+    server    master-0    master-0.seems.cloud:6443   check
+    server    master-1    master-1.seems.cloud:6443   check
+    server    master-2    master-2.seems.cloud:6443   check
+    
+frontend kube_config_server
+    mode              tcp
+    bind              :22623
+    default_backend   kube_config_server
 
-frontend bootstrap
-    mode tcp
-    bind :22623
-    default_backend bootstrap
+backend kube_config_server
+    mode      tcp
+    balance   leastconn
+    server    bootstrap   bootstrap-0.seems.cloud:22623  check
+    server    master-0    master-0.seems.cloud:22623   check
+    server    master-1    master-1.seems.cloud:22623   check
+    server    master-2    master-2.seems.cloud:22623   check
 
-backend bootstrap
-    mode tcp
-    balance leastconn
-    server bastion ${PREFIX}-bootstrap.seems.cloud:22623
-    server master0 ${PREFIX}-master-0.seems.cloud:22623
-    server master1 ${PREFIX}-master-1.seems.cloud:22623
-    server master2 ${PREFIX}-master-2.seems.cloud:22623
+frontend http_ingress
+    mode              tcp
+    bind              :8080
+    default_backend   http_ingress
+
+backend http_ingress
+    mode      tcp
+    balance   leastconn
+    server    master-0    worker-0.seems.cloud:80   check
+    server    master-1    worker-1.seems.cloud:80   check
+    server    master-2    worker-2.seems.cloud:80   check
+    
+frontend https_ingress
+    mode              tcp
+    bind              :8443
+    default_backend   https_ingress
+
+backend https_ingress
+    mode      tcp
+    balance   leastconn
+    server    master-0    worker-0.seems.cloud:8443   check
+    server    master-1    worker-1.seems.cloud:8443   check
+    server    master-2    worker-2.seems.cloud:8443   check
 EndOfMessage
 
 sudo service haproxy restart
@@ -114,8 +173,10 @@ sudo umount /boot
 sudo mount /dev/sda3 /boot/
 
 sudo -i su -
+```
 
-ADDR="10.100.101.5"
+```bash
+ADDR="10.100.101.8"
 GW="10.100.101.1"
 NETMASK="255.255.255.255"
 NAMESERVER="169.254.169.254"
@@ -127,7 +188,7 @@ INST_TYPE="bootstrap"
 # INST_TYPE="worker"
 
 INST_ENABLED="coreos.inst=yes"
-INST_DEV="coreos.inst.install_dev=/dev/sda"
+INST_DEV="coreos.inst.install_dev=/dev/sdb"
 INST_IMAGE="coreos.inst.image_url=${INST_URL}/rhcos.raw.gz"
 INST_IGN="coreos.inst.ignition_url=${INST_URL}/${INST_TYPE}.ign"
 

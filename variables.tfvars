@@ -60,7 +60,7 @@ aaa_instance_eee-desired_status    = "RUNNING"
 aaa_instance_eee-tags              = ["bootstrap", "all"]
 aaa_instance_eee-zones             = "europe-central2-a"
 aaa_instance_eee-cidr              = "10.100.101.0/24"
-aaa_instance_eee-type              = "e2-highcpu-2"
+aaa_instance_eee-type              = "e2-standard-2"
 aaa_instance_eee-preemptible       = true
 aaa_instance_eee-automatic_restart = false
 
@@ -77,7 +77,7 @@ aaa_instance_bbb-desired_status    = "RUNNING"
 aaa_instance_bbb-tags              = ["master", "all", "cluster"]
 aaa_instance_bbb-zones             = "europe-central2-a"
 aaa_instance_bbb-cidr              = "10.100.102.0/24"
-aaa_instance_bbb-type              = "e2-highcpu-2"
+aaa_instance_bbb-type              = "e2-standard-2"
 aaa_instance_bbb-preemptible       = true
 aaa_instance_bbb-automatic_restart = false
 
@@ -94,6 +94,6 @@ aaa_instance_ddd-desired_status    = "RUNNING"
 aaa_instance_ddd-tags              = ["worker", "all", "cluster"]
 aaa_instance_ddd-zones             = "europe-central2-a"
 aaa_instance_ddd-cidr              = "10.100.103.0/24"
-aaa_instance_ddd-type              = "e2-highcpu-2"
+aaa_instance_ddd-type              = "e2-standard-2"
 aaa_instance_ddd-preemptible       = true
 aaa_instance_ddd-automatic_restart = false
