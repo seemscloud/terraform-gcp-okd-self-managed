@@ -1,3 +1,13 @@
+resource "google_compute_address" "node_group-internal" {
+  name   = "${var.name}-${count.index}"
+  region = var.region
+
+  count = var.counter
+
+  address_type = "INTERNAL"
+  subnetwork   = google_compute_subnetwork.node_group.id
+}
+
 resource "google_compute_instance" "node_group" {
   count          = var.counter
   name           = "${var.name}-${count.index}"
@@ -17,6 +27,8 @@ resource "google_compute_instance" "node_group" {
   network_interface {
     network    = var.network.id
     subnetwork = google_compute_subnetwork.node_group.id
+
+    network_ip = google_compute_address.node_group-internal[count.index].address
   }
   scheduling {
     preemptible       = var.preemptible

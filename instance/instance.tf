@@ -20,6 +20,8 @@ resource "google_compute_instance" "instance" {
     access_config {
       nat_ip = google_compute_address.instance.address
     }
+
+    network_ip = google_compute_address.instance-internal.address
   }
   scheduling {
     preemptible       = var.preemptible

@@ -4,7 +4,7 @@ resource "google_compute_instance_group" "instance" {
   zone = var.zones
 
   instances = [
-    google_compute_instance.instance.id
+    google_compute_instance.instance.self_link
   ]
 
   depends_on = [
