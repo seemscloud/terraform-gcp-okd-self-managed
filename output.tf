@@ -1,8 +1,8 @@
-output "bastion-external_addresses" {
+output "bastion" {
   value = module.bastion.external_address
 }
 
-output "node_group-dns_a_records" {
+output "domains" {
   value = concat(
     module.node_group-master.dns_a_records,
     module.node_group-worker.dns_a_records,

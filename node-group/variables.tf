@@ -78,3 +78,7 @@ variable "preemptible" {
 variable "automatic_restart" {
   type = bool
 }
+
+variable "metadata-user_data" {
+  type = string
+}

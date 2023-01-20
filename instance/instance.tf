@@ -38,4 +38,8 @@ resource "google_compute_instance" "instance" {
       boot_disk.0.initialize_params.0.image
     ]
   }
+
+  metadata = {
+    serial-port-enable = true
+  }
 }

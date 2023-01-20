@@ -74,17 +74,18 @@ module "node_group-bootstrap" {
   dns_zone = module.networking.aaa_dns_zone_aaa
   name     = local.aaa_instance_eee-name
 
-  counter           = var.aaa_instance_eee-counter
-  image             = var.aaa_instance_eee-image
-  root_disk_size    = var.aaa_instance_eee-root_disk_size
-  root_disk_type    = var.aaa_instance_eee-root_disk_type
-  desired_status    = var.aaa_instance_eee-desired_status
-  type              = var.aaa_instance_eee-type
-  zones             = var.aaa_instance_eee-zones
-  tags              = var.aaa_instance_eee-tags
-  preemptible       = var.aaa_instance_eee-preemptible
-  automatic_restart = var.aaa_instance_eee-automatic_restart
-  cidr              = var.aaa_instance_eee-cidr
+  counter            = var.aaa_instance_eee-counter
+  image              = var.aaa_instance_eee-image
+  root_disk_size     = var.aaa_instance_eee-root_disk_size
+  root_disk_type     = var.aaa_instance_eee-root_disk_type
+  desired_status     = var.aaa_instance_eee-desired_status
+  type               = var.aaa_instance_eee-type
+  zones              = var.aaa_instance_eee-zones
+  tags               = var.aaa_instance_eee-tags
+  preemptible        = var.aaa_instance_eee-preemptible
+  automatic_restart  = var.aaa_instance_eee-automatic_restart
+  cidr               = var.aaa_instance_eee-cidr
+  metadata-user_data = var.aaa_instance_eee-metadata_user_data
 
   depends_on = [
     module.networking
@@ -104,18 +105,19 @@ module "node_group-master" {
   network  = module.networking.aaa_network_aaa
   dns_zone = module.networking.aaa_dns_zone_aaa
 
-  name              = local.aaa_instance_bbb-name
-  counter           = var.aaa_instance_bbb-counter
-  image             = var.aaa_instance_bbb-image
-  root_disk_size    = var.aaa_instance_bbb-root_disk_size
-  root_disk_type    = var.aaa_instance_bbb-root_disk_type
-  desired_status    = var.aaa_instance_bbb-desired_status
-  type              = var.aaa_instance_bbb-type
-  zones             = var.aaa_instance_bbb-zones
-  tags              = var.aaa_instance_bbb-tags
-  preemptible       = var.aaa_instance_bbb-preemptible
-  automatic_restart = var.aaa_instance_bbb-automatic_restart
-  cidr              = var.aaa_instance_bbb-cidr
+  name               = local.aaa_instance_bbb-name
+  counter            = var.aaa_instance_bbb-counter
+  image              = var.aaa_instance_bbb-image
+  root_disk_size     = var.aaa_instance_bbb-root_disk_size
+  root_disk_type     = var.aaa_instance_bbb-root_disk_type
+  desired_status     = var.aaa_instance_bbb-desired_status
+  type               = var.aaa_instance_bbb-type
+  zones              = var.aaa_instance_bbb-zones
+  tags               = var.aaa_instance_bbb-tags
+  preemptible        = var.aaa_instance_bbb-preemptible
+  automatic_restart  = var.aaa_instance_bbb-automatic_restart
+  cidr               = var.aaa_instance_bbb-cidr
+  metadata-user_data = var.aaa_instance_bbb-metadata_user_data
 
   depends_on = [
     module.networking
@@ -136,17 +138,18 @@ module "node_group-worker" {
   dns_zone = module.networking.aaa_dns_zone_aaa
   name     = local.aaa_instance_ddd-name
 
-  counter           = var.aaa_instance_ddd-counter
-  image             = var.aaa_instance_ddd-image
-  root_disk_size    = var.aaa_instance_ddd-root_disk_size
-  root_disk_type    = var.aaa_instance_ddd-root_disk_type
-  desired_status    = var.aaa_instance_ddd-desired_status
-  type              = var.aaa_instance_ddd-type
-  zones             = var.aaa_instance_ddd-zones
-  tags              = var.aaa_instance_ddd-tags
-  preemptible       = var.aaa_instance_ddd-preemptible
-  automatic_restart = var.aaa_instance_ddd-automatic_restart
-  cidr              = var.aaa_instance_ddd-cidr
+  counter            = var.aaa_instance_ddd-counter
+  image              = var.aaa_instance_ddd-image
+  root_disk_size     = var.aaa_instance_ddd-root_disk_size
+  root_disk_type     = var.aaa_instance_ddd-root_disk_type
+  desired_status     = var.aaa_instance_ddd-desired_status
+  type               = var.aaa_instance_ddd-type
+  zones              = var.aaa_instance_ddd-zones
+  tags               = var.aaa_instance_ddd-tags
+  preemptible        = var.aaa_instance_ddd-preemptible
+  automatic_restart  = var.aaa_instance_ddd-automatic_restart
+  cidr               = var.aaa_instance_ddd-cidr
+  metadata-user_data = var.aaa_instance_ddd-metadata_user_data
 
   depends_on = [
     module.networking

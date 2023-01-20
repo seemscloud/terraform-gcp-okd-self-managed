@@ -7,27 +7,20 @@ sudo apt-get install -y vim curl wget nginx haproxy bind9-utils dnsutils net-too
 ```
 
 ```bash
-mkdir -p archives archives/okd archives/fcos
+mkdir -p archives archives
 
 OKD_VERSION="4.11.0-0.okd-2023-01-14-152430"
-FCOS_VERSION="37.20221225.3.0"
 
-wget "https://github.com/okd-project/okd/releases/download/${OKD_VERSION}/openshift-client-linux-${OKD_VERSION}.tar.gz" -O archives/okd/os-client-linux.tar.gz
-wget "https://github.com/okd-project/okd/releases/download/${OKD_VERSION}/openshift-install-linux-${OKD_VERSION}.tar.gz" -O archives/okd/os-linux-install.tar.gz
-wget "https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/${FCOS_VERSION}/x86_64/fedora-coreos-${FCOS_VERSION}-metal.x86_64.raw.xz" -O archives/fcos/rhcos.raw.gz
-wget "https://builds.coreos.fedoraproject.org/prod/streams/stable/builds/${FCOS_VERSION}/x86_64/fedora-coreos-${FCOS_VERSION}-metal.x86_64.raw.xz.sig" -O archives/fcos/rhcos.raw.gz.sig
+wget "https://github.com/okd-project/okd/releases/download/${OKD_VERSION}/openshift-client-linux-${OKD_VERSION}.tar.gz" -O archives/os-client-linux.tar.gz
+wget "https://github.com/okd-project/okd/releases/download/${OKD_VERSION}/openshift-install-linux-${OKD_VERSION}.tar.gz" -O archives/os-linux-install.tar.gz
 
-sudo tar -xf archives/okd/os-client-linux.tar.gz -C /usr/local/bin
-sudo tar -xf archives/okd/os-linux-install.tar.gz -C /usr/local/bin
-sudo cp archives/fcos/* /var/www/html
+sudo tar -xf archives/os-client-linux.tar.gz -C /usr/local/bin
+sudo tar -xf archives/os-linux-install.tar.gz -C /usr/local/bin
 
 sudo chmod 755 /usr/local/bin/*
-sudo chmod 644 /var/www/html/*
-sudo rm -f /var/www/html/*.html
 sudo rm -f /usr/local/bin/README.md
 
 ls -lh /usr/local/bin
-ls -lh /var/www/html
 
 ```
 
@@ -42,7 +35,7 @@ metadata:
 compute:
   - hyperthreading: Enabled
     name: worker
-    replicas: 0
+    replicas: 1
 controlPlane:
   hyperthreading: Enabled
   name: master
@@ -60,15 +53,16 @@ fips: false
 pullSecret: '{"auths":{"fake":{"auth": "bar"}}}'
 sshKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCxMR6x6rHclUBQI3IQVPZN8xjkAVVAZmS1PV/hNg/XPc5sl5fI7/3FLmwu+A9PDuiPu5++60Ns4NtYJcd+hVQ9m/htl6DGPeUoflin1pmVFSfKMUctTRWsl+e2ldt3CVmTgFclLABdLDR+cSb3jSqNXgonzjNcWbTfhrsSnqNuD+2GxXpGZXc4rYDloSrlGVOx0mEiyJrMocJFuVlh1JB8Os0KNnx5qD56h5zIRLGkhHhgXIO5kJ+hNB+vF3FV2Fq9Ar47+DrQiD/o9/h17HFDvD0tzze1GLYAJs4QcFJJPKdWM1kHyXa/p9TIFLc3rVnCrVx1NihgaEhiY+d452otV0p1Bq1tvotfPJ92BDSNlF7A1YuJNYqRkNNpwSPMznPQtVkeRCHTNH5MmMqhPptGEPLiDlkMUZeFFjTKz0IDo6QCX05WBl+SXYLo1l2R9jCoKstmoKvlsFY6fcYpSYj78X9E4bIX++LSLiG9oGXwg2xoZTlwofhqjnI+xc9tMiU='
 EndOfMessage
-```
 
-```bash
 openshift-install create manifests --log-level=debug --dir=install_dir/
 openshift-install create ignition-configs --log-level=debug --dir=install_dir/
 
 sudo cp -R install_dir/* /var/www/html/
 sudo chmod 644 /var/www/html/*
+
 sudo service nginx restart
+
+ls -lh /var/www/html
 
 ```
 
@@ -84,12 +78,6 @@ global
     group     haproxy
     daemon
 
-listen stats
-    bind :9000
-    mode http
-    stats enable
-    stats uri /
-
 defaults
     option  forwardfor      except 127.0.0.0/8
     retries                 3
@@ -101,7 +89,15 @@ defaults
     timeout http-keep-alive 10s
     timeout check           10s
     maxconn                 20000
-    
+
+
+listen stats
+    bind :9000
+    mode http
+    stats enable
+    stats uri /
+
+
 frontend kube_api
     mode            tcp
     bind            :6443
@@ -114,7 +110,8 @@ backend kube_api
     server    master-0    master-0.seems.cloud:6443   check
     server    master-1    master-1.seems.cloud:6443   check
     server    master-2    master-2.seems.cloud:6443   check
-    
+
+
 frontend kube_config_server
     mode              tcp
     bind              :22623
@@ -123,34 +120,36 @@ frontend kube_config_server
 backend kube_config_server
     mode      tcp
     balance   leastconn
+    
     server    bootstrap   bootstrap-0.seems.cloud:22623  check
     server    master-0    master-0.seems.cloud:22623   check
     server    master-1    master-1.seems.cloud:22623   check
     server    master-2    master-2.seems.cloud:22623   check
 
+
 frontend http_ingress
     mode              tcp
-    bind              :8080
+    bind              :80
     default_backend   http_ingress
 
 backend http_ingress
     mode      tcp
     balance   leastconn
-    server    master-0    worker-0.seems.cloud:80   check
-    server    master-1    worker-1.seems.cloud:80   check
-    server    master-2    worker-2.seems.cloud:80   check
     
+    server    worker-0    worker-0.seems.cloud:80   check
+
+
 frontend https_ingress
     mode              tcp
-    bind              :8443
+    bind              :443
+    
     default_backend   https_ingress
 
 backend https_ingress
     mode      tcp
     balance   leastconn
-    server    master-0    worker-0.seems.cloud:8443   check
-    server    master-1    worker-1.seems.cloud:8443   check
-    server    master-2    worker-2.seems.cloud:8443   check
+    
+    server    worker-0    worker-0.seems.cloud:443   check
 EndOfMessage
 
 sudo service haproxy restart

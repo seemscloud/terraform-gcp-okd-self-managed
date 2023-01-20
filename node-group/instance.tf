@@ -53,5 +53,6 @@ resource "google_compute_instance" "node_group" {
 
   metadata = {
     serial-port-enable = true
+    user-data          = file("${path.root}/${var.metadata-user_data}")
   }
 }
