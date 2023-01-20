@@ -64,6 +64,8 @@ sudo service nginx restart
 
 ls -lh /var/www/html
 
+# Change Nginx port 80 to 8080
+
 ```
 
 ```bash
