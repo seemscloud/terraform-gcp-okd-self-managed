@@ -1,5 +1,3 @@
-## Prepare Bastion as Load Balancer
-
 ```bash
 sudo apt-get update
 
@@ -153,10 +151,6 @@ EndOfMessage
 sudo service haproxy restart
 
 ```
-
-## Install Node
-
-#### Run on bastion node
 
 ```bash
 openshift-install wait-for bootstrap-complete --log-level=debug --dir=install_dir/
