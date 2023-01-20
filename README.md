@@ -120,7 +120,6 @@ frontend kube_config_server
 backend kube_config_server
     mode      tcp
     balance   leastconn
-    
     server    bootstrap   bootstrap-0.seems.cloud:22623  check
     server    master-0    master-0.seems.cloud:22623   check
     server    master-1    master-1.seems.cloud:22623   check
@@ -135,20 +134,17 @@ frontend http_ingress
 backend http_ingress
     mode      tcp
     balance   leastconn
-    
     server    worker-0    worker-0.seems.cloud:80   check
 
 
 frontend https_ingress
     mode              tcp
     bind              :443
-    
     default_backend   https_ingress
 
 backend https_ingress
     mode      tcp
     balance   leastconn
-    
     server    worker-0    worker-0.seems.cloud:443   check
 EndOfMessage
 
