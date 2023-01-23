@@ -10,7 +10,7 @@ resource "google_compute_firewall" "allow-internet_to_bastion" {
 
   allow {
     protocol = "tcp"
-    ports    = ["22", "9000"]
+    ports    = ["22", "9000", "80", "443", "6443"]
   }
 
   target_tags = ["bastion"]
@@ -34,7 +34,6 @@ resource "google_compute_firewall" "allow-all_to_all" {
 
   target_tags = ["all"]
 }
-
 
 ################################################
 ##

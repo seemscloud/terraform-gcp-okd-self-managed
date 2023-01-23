@@ -5,7 +5,7 @@ resource "google_compute_address" "node_group-internal" {
   count = var.counter
 
   address_type = "INTERNAL"
-  subnetwork   = google_compute_subnetwork.node_group.id
+  subnetwork   = var.okd_subnetwork.id
 }
 
 resource "google_compute_instance" "node_group" {
@@ -26,7 +26,7 @@ resource "google_compute_instance" "node_group" {
 
   network_interface {
     network    = var.network.id
-    subnetwork = google_compute_subnetwork.node_group.id
+    subnetwork = var.okd_subnetwork.id
 
     network_ip = google_compute_address.node_group-internal[count.index].address
   }
@@ -34,10 +34,6 @@ resource "google_compute_instance" "node_group" {
     preemptible       = var.preemptible
     automatic_restart = var.automatic_restart
   }
-
-  depends_on = [
-    google_compute_subnetwork.node_group
-  ]
 
   lifecycle {
     ignore_changes = [

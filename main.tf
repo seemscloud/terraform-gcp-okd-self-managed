@@ -7,11 +7,13 @@ module "networking" {
 
   region = var.region
 
-  network_name       = local.aaa_networking_aaa-name
-  dns_zone_name      = local.aaa_networking_aaa-dns_zone_name
-  dns_zone_dns_name  = var.aaa_networking_aaa-dns_zone_dns_name
-  lb_subnetwork_name = local.aaa_networking_aaa-lb_subnetwork_name
-  lb_subnetwork_cidr = var.aaa_networking_aaa-lb_subnetwork_cidr
+  network_name        = local.aaa_networking_aaa-name
+  dns_zone_name       = local.aaa_networking_aaa-dns_zone_name
+  dns_zone_dns_name   = var.aaa_networking_aaa-dns_zone_dns_name
+  lb_subnetwork_name  = local.aaa_networking_aaa-lb_subnetwork_name
+  lb_subnetwork_cidr  = var.aaa_networking_aaa-lb_subnetwork_cidr
+  okd_subnetwork_name = local.aaa_networking_aaa-okd_subnetwork_name
+  okd_subnetwork_cidr = var.aaa_networking_aaa-okd_subnetwork_cidr
 }
 
 ###################################
@@ -70,10 +72,11 @@ module "node_group-bootstrap" {
   region = var.region
   prefix = local.random
 
-  network  = module.networking.aaa_network_aaa
-  dns_zone = module.networking.aaa_dns_zone_aaa
-  name     = local.aaa_instance_eee-name
+  network        = module.networking.aaa_network_aaa
+  dns_zone       = module.networking.aaa_dns_zone_aaa
+  okd_subnetwork = module.networking.okd_subnetwork
 
+  name               = local.aaa_instance_eee-name
   counter            = var.aaa_instance_eee-counter
   image              = var.aaa_instance_eee-image
   root_disk_size     = var.aaa_instance_eee-root_disk_size
@@ -84,7 +87,6 @@ module "node_group-bootstrap" {
   tags               = var.aaa_instance_eee-tags
   preemptible        = var.aaa_instance_eee-preemptible
   automatic_restart  = var.aaa_instance_eee-automatic_restart
-  cidr               = var.aaa_instance_eee-cidr
   metadata-user_data = var.aaa_instance_eee-metadata_user_data
 
   depends_on = [
@@ -102,8 +104,9 @@ module "node_group-master" {
   region = var.region
   prefix = local.random
 
-  network  = module.networking.aaa_network_aaa
-  dns_zone = module.networking.aaa_dns_zone_aaa
+  network        = module.networking.aaa_network_aaa
+  dns_zone       = module.networking.aaa_dns_zone_aaa
+  okd_subnetwork = module.networking.okd_subnetwork
 
   name               = local.aaa_instance_bbb-name
   counter            = var.aaa_instance_bbb-counter
@@ -116,7 +119,6 @@ module "node_group-master" {
   tags               = var.aaa_instance_bbb-tags
   preemptible        = var.aaa_instance_bbb-preemptible
   automatic_restart  = var.aaa_instance_bbb-automatic_restart
-  cidr               = var.aaa_instance_bbb-cidr
   metadata-user_data = var.aaa_instance_bbb-metadata_user_data
 
   depends_on = [
@@ -134,10 +136,11 @@ module "node_group-worker" {
   region = var.region
   prefix = local.random
 
-  network  = module.networking.aaa_network_aaa
-  dns_zone = module.networking.aaa_dns_zone_aaa
-  name     = local.aaa_instance_ddd-name
+  network        = module.networking.aaa_network_aaa
+  dns_zone       = module.networking.aaa_dns_zone_aaa
+  okd_subnetwork = module.networking.okd_subnetwork
 
+  name               = local.aaa_instance_ddd-name
   counter            = var.aaa_instance_ddd-counter
   image              = var.aaa_instance_ddd-image
   root_disk_size     = var.aaa_instance_ddd-root_disk_size
@@ -148,7 +151,6 @@ module "node_group-worker" {
   tags               = var.aaa_instance_ddd-tags
   preemptible        = var.aaa_instance_ddd-preemptible
   automatic_restart  = var.aaa_instance_ddd-automatic_restart
-  cidr               = var.aaa_instance_ddd-cidr
   metadata-user_data = var.aaa_instance_ddd-metadata_user_data
 
   depends_on = [

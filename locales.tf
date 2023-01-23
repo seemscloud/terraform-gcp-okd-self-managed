@@ -9,9 +9,10 @@ locals {
   #
   #     Networking
   #
-  aaa_networking_aaa-name               = "${local.random}-${var.aaa_networking_aaa-name}"
-  aaa_networking_aaa-dns_zone_name      = "${local.random}-${var.aaa_networking_aaa-dns_zone_name}"
-  aaa_networking_aaa-lb_subnetwork_name = "${local.random}-${var.aaa_networking_aaa-lb_subnetwork_name}"
+  aaa_networking_aaa-name                = "${local.random}-${var.aaa_networking_aaa-name}"
+  aaa_networking_aaa-dns_zone_name       = "${local.random}-${var.aaa_networking_aaa-dns_zone_name}"
+  aaa_networking_aaa-lb_subnetwork_name  = "${local.random}-${var.aaa_networking_aaa-lb_subnetwork_name}"
+  aaa_networking_aaa-okd_subnetwork_name = "${local.random}-${var.aaa_networking_aaa-okd_subnetwork_name}"
 
   ###################################
   #

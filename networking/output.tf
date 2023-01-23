@@ -7,5 +7,9 @@ output "aaa_dns_zone_aaa" {
 }
 
 output "lb_subnetwork" {
-  value = google_compute_subnetwork.lb_subnetwork
+  value = google_compute_subnetwork.lb
+}
+
+output "okd_subnetwork" {
+  value = google_compute_subnetwork.okd
 }

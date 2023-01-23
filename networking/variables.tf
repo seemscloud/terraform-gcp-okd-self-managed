@@ -33,3 +33,11 @@ variable "lb_subnetwork_name" {
 variable "lb_subnetwork_cidr" {
   type = string
 }
+
+variable "okd_subnetwork_name" {
+  type = string
+}
+
+variable "okd_subnetwork_cidr" {
+  type = string
+}

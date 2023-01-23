@@ -46,6 +46,14 @@ variable "aaa_networking_aaa-lb_subnetwork_cidr" {
   type = string
 }
 
+variable "aaa_networking_aaa-okd_subnetwork_name" {
+  type = string
+}
+
+variable "aaa_networking_aaa-okd_subnetwork_cidr" {
+  type = string
+}
+
 ###################################
 #
 #     Load Balancing
@@ -142,10 +150,6 @@ variable "aaa_instance_bbb-zones" {
   type = string
 }
 
-variable "aaa_instance_bbb-cidr" {
-  type = string
-}
-
 variable "aaa_instance_bbb-type" {
   type = string
 }
@@ -195,10 +199,6 @@ variable "aaa_instance_ddd-tags" {
 }
 
 variable "aaa_instance_ddd-zones" {
-  type = string
-}
-
-variable "aaa_instance_ddd-cidr" {
   type = string
 }
 
@@ -252,10 +252,6 @@ variable "aaa_instance_eee-tags" {
 }
 
 variable "aaa_instance_eee-zones" {
-  type = string
-}
-
-variable "aaa_instance_eee-cidr" {
   type = string
 }
 

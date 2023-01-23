@@ -27,6 +27,13 @@ variable "dns_zone" {
   })
 }
 
+variable "okd_subnetwork" {
+  type = object({
+    name = string
+    id   = string
+  })
+}
+
 ###################################
 #
 #     Node Group
@@ -60,10 +67,6 @@ variable "tags" {
 }
 
 variable "zones" {
-  type = string
-}
-
-variable "cidr" {
   type = string
 }
 
