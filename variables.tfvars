@@ -88,7 +88,7 @@ aaa_instance_bbb-metadata_user_data = "user-data/master.ign"
 #     Node Group (Worker)
 #
 aaa_instance_ddd-name               = "worker"
-aaa_instance_ddd-counter            = 2
+aaa_instance_ddd-counter            = 3
 aaa_instance_ddd-image              = "fedora-coreos-cloud/fedora-coreos-stable"
 aaa_instance_ddd-root_disk_size     = 64
 aaa_instance_ddd-root_disk_type     = "pd-ssd"

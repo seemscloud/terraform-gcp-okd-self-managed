@@ -28,6 +28,11 @@ resource "google_compute_firewall" "allow-all_to_all" {
   }
 
   allow {
+    protocol = "udp"
+    ports    = []
+  }
+
+  allow {
     protocol = "icmp"
     ports    = []
   }
