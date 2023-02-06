@@ -18,7 +18,7 @@ systemctl stop nginx
 
 ```
 
-## Step 1
+## Setup
 
 ```bash
 apt-get update
@@ -26,8 +26,6 @@ apt-get update
 apt-get install -y vim curl wget nginx haproxy bind9-utils dnsutils net-tools telnet bash-completion jq
 
 ```
-
-## Step 2
 
 ```bash
 OKD_VERSION="4.11.0-0.okd-2023-01-14-152430"
