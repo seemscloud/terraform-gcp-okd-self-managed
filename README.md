@@ -9,8 +9,6 @@ terraform apply -var-file variables.tfvars
 ```bash
 ansible-playbook \
   --inventory inventories/inventory.yml \
-  --limit all \
-  --tags all \
   --extra-vars @configs/config.yml \
   roles/main.yml
 ```
