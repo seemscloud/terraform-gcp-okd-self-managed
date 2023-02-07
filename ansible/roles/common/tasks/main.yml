@@ -1,0 +1,14 @@
+- name: Install Common Packages
+  apt:
+    name:
+      - vim
+      - curl
+      - wget
+      - bind9-utils
+      - dnsutils
+      - net-tools
+      - telnet
+      - bash-completion
+      - jq
+    state: present
+    update_cache: yes

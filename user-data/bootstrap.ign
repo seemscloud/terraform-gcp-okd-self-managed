@@ -1,1 +1,0 @@
-{"ignition":{"config":{"merge":[{"source":"http://bastion.seems.cloud:8080/bootstrap.ign"}]},"version":"3.2.0"}}

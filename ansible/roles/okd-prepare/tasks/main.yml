@@ -1,0 +1,109 @@
+- name: "Cleanup OKD Binaries"
+  file:
+    path:
+      - /usr/local/bin/oc
+      - /usr/local/bin/kubectl
+      - /usr/local/bin/openshift-install
+    state: absent
+
+- name: "Cleanup '/root/install_dir' Directories"
+  file:
+    path: /root/install_dir
+    state: absent
+
+- name: "Cleanup '/var/www/html/' Directory"
+  file:
+    path: /var/www/html/
+    state: absent
+
+- name: "Download 'client' to '/tmp/client.tgz'"
+  get_url:
+    url: "https://github.com/okd-project/okd/releases/download/{{ ARCHIVE_VERSION }}/openshift-client-linux-{{ ARCHIVE_VERSION }}.tar.gz"
+    dest: /tmp/client.tgz
+
+- name: "Download 'install' to '/tmp/install.tgz'"
+  get_url:
+    url: "https://github.com/okd-project/okd/releases/download/{{ ARCHIVE_VERSION }}/openshift-install-linux-{{ ARCHIVE_VERSION }}.tar.gz"
+    dest: /tmp/install.tgz
+
+- name: "Extract '/tmp/client.tgz' to '/usr/local/bin'"
+  unarchive:
+    src: /tmp/client.tgz
+    dest: /usr/local/bin
+    remote_src: yes
+
+- name: "Extract '/tmp/install.tgz' to '/usr/local/bin'"
+  unarchive:
+    src: /tmp/install.tgz
+    dest: /usr/local/bin
+    remote_src: yes
+
+- name: "Delete '/tmp/client.tgz'"
+  file:
+    path: /tmp/client.tgz
+    state: absent
+
+- name: "Delete '/tmp/install.tgz'"
+  file:
+    path: /tmp/install.tgz
+    state: absent
+
+- name: "Create '/root/install_dir'"
+  file:
+    path: /root/install_dir
+    state: directory
+    owner: root
+    group: root
+    mode: 0700
+
+- name: "Copy 'install-config.yml' to '/root/install_dir'"
+  template:
+    src: install-config.yaml.j2
+    dest: /root/install_dir/install-config.yaml
+    owner: root
+    group: root
+    mode: 0600
+
+- name: "Openshift Install Create Manifests"
+  shell: openshift-install create manifests --log-level=debug --dir=/root/install_dir/
+  register: result
+
+- name: "Print: Openshift Install Create Manifests"
+  debug:
+    msg: "{{ result }}"
+
+- name: "Openshift Install Create Ignition Configs"
+  shell: openshift-install create ignition-configs --log-level=debug --dir=/root/install_dir/
+  register: result
+
+- name: "Print: Openshift Install Ignition Configs"
+  debug:
+    msg: "{{ result }}"
+
+- name: "Create '/var/www/html' Directory"
+  file:
+    path: /var/www/html
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: "Copy '/root/install_dir/' to '/var/www/html'"
+  copy:
+    src: /root/install_dir/
+    dest: /var/www/html
+    remote_src: true
+
+- name: "Fix Permissions in /var/www/html"
+  file:
+    path: /var/www/html
+    recurse: true
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
+
+- name: "Restart Nginx Server"
+  service:
+    name: nginx
+    state: restarted

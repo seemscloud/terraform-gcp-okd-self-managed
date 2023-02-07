@@ -1,0 +1,23 @@
+- name: Install 'HAProxy' Package
+  apt:
+    name: haproxy
+    state: present
+    update_cache: yes
+
+- name: "Cleanup HAProxy Config"
+  file:
+    path: /etc/haproxy/haproxy.cfg
+    state: absent
+
+- name: "Copy 'haproxy.cfg' to '/etc/haproxy/haproxy.cfg'"
+  copy:
+    src: haproxy.cfg
+    dest: /etc/haproxy/haproxy.cfg
+    owner: root
+    group: root
+    mode: 0644
+
+- name: "Restart HAProxy Service"
+  service:
+    name: haproxy
+    state: restarted

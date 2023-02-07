@@ -1,0 +1,15 @@
+---
+- hosts: all
+  gather_facts: false
+
+  tasks:
+    - include_role:
+        name: common
+    - include_role:
+        name: haproxy
+    - include_role:
+        name: nginx
+    - include_role:
+        name: okd-prepare
+      vars:
+        ARCHIVE_VERSION: "4.11.0-0.okd-2023-01-14-152430"

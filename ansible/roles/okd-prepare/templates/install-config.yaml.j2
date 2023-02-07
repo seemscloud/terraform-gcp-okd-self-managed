@@ -1,0 +1,29 @@
+apiVersion: v1
+baseDomain: {{ okd.baseDomain }}
+metadata:
+  name: {{ okd.metadata.name }}
+compute:
+  - hyperthreading: {{ okd.compute.hyperthreading }}
+    name: worker
+    replicas: 2
+controlPlane:
+  hyperthreading: {{ okd.controlPlane.hyperthreading }}
+  name: master
+  replicas: 3
+networking:
+  clusterNetwork:
+{% for net in okd.networking.clusterNetwork %}
+    - cidr: {{ net.cidr }}
+      hostPrefix: {{ net.hostPrefix }}
+{% endfor %}
+  networkType: {{ okd.networking.networkType }}
+  serviceNetwork:
+{% for net in okd.networking.serviceNetwork %}
+    - {{ net }}
+{% endfor %}
+platform:
+  none: { }
+fips: {{ okd.fips }}
+pullSecret: '{{ okd.pullSecret | from_yaml | to_json }}'
+sshKey: |
+    {{ okd.sshKey | indent(width=4) }}
