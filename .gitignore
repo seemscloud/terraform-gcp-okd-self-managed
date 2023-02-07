@@ -1,5 +1,5 @@
 /terraform/.idea/
-/terraform//.terraform/
+/terraform/.terraform/
 /terraform/.credentials.json
 /terraform/.states/
 /terraform/.terraform.lock.hcl
